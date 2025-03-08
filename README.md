@@ -8,6 +8,8 @@
 
 ## demo architecture diagram
 
+<img width="914" alt="image" src="https://github.com/user-attachments/assets/c48aa333-7a5f-4eaf-afe4-ffa886fd7e2e" />
+
 
 ## pre-requisite
 - **Enable Amazon Transcribe to capture Zoom Audio**
