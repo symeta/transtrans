@@ -16,7 +16,7 @@
     ```sh
     brew install blackhole-2ch
     ```
-    或从 BlackHole GitHub 页面 下载安装
+    或从 [BlackHole GitHub](https://github.com/ExistentialAudio/BlackHole)页面 下载安装
 
     - 配置 Mac 音频设置：
       打开"音频 MIDI 设置"（在应用程序 > 实用工具中）
