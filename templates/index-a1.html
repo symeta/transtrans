@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>实时音频转录和翻译</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        .transcription-container {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .transcription-box {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 3px;
+        }
+        .language-label {
+            font-weight: bold;
+            color: #333;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>实时音频转录和翻译</h1>
+    <button onclick="startTranscription()">开始转录</button>
+    <button onclick="stopTranscription()">停止转录</button>
+
+    <div class="transcription-container">
+        <div class="transcription-box">
+            <div class="language-label">中文:</div>
+            <div id="chinese-text"></div>
+        </div>
+        <div class="transcription-box">
+            <div class="language-label">English:</div>
+            <div id="english-text"></div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        
+        socket.on('transcription_update', function(data) {
+            document.getElementById('chinese-text').innerText = data.chinese;
+            document.getElementById('english-text').innerText = data.english;
+        });
+
+        function startTranscription() {
+            fetch('/start_transcription', {method: 'POST'})
+                .then(response => response.json())
+                .then(data => console.log(data));
+        }
+
+        function stopTranscription() {
+            fetch('/stop_transcription', {method: 'POST'})
+                .then(response => response.json())
+                .then(data => console.log(data));
+        }
+    </script>
+</body>
+</html>

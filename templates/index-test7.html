@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频录制与语音转录</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            width: 640px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .video-container {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        #video-feed {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        #start-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        #stop-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .transcription-container {
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        #transcription-area {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: none;
+            box-sizing: border-box;
+        }
+        
+        .status {
+            margin-top: 10px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>视频录制与语音转录</h1>
+        
+        <div class="video-container">
+            <img id="video-feed" src="{{ url_for('video_feed') }}" alt="视频画面">
+        </div>
+        
+        <div class="controls">
+            <button id="start-btn" onclick="startRecording()">开始录制</button>
+            <button id="stop-btn" onclick="stopRecording()" disabled>停止录制</button>
+        </div>
+        
+        <div class="status" id="status-message">就绪，点击开始录制按钮启动录制。</div>
+        
+        <div class="transcription-container">
+            <h3>语音转录结果：</h3>
+            <textarea id="transcription-area" readonly placeholder="录制时语音转录的内容将显示在这里..."></textarea>
+        </div>
+    </div>
+    
+    <script>
+        // 连接Socket.IO服务器
+        const socket = io();
+        let transcriptionText = '';
+        
+        // Socket.IO事件处理
+        socket.on('connect', function() {
+            console.log('已连接到服务器');
+        });
+        
+        socket.on('transcription_update', function(data) {
+            // 添加新的转录文本，在新行显示
+            transcriptionText += data.text + '\n';
+            document.getElementById('transcription-area').value = transcriptionText;
+            // 自动滚动到底部
+            const textarea = document.getElementById('transcription-area');
+            textarea.scrollTop = textarea.scrollHeight;
+        });
+        
+        // 开始录制
+        function startRecording() {
+            document.getElementById('status-message').textContent = '正在启动录制...';
+            document.getElementById('start-btn').disabled = true;
+            
+            fetch('/start_recording', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('status-message').textContent = '录制中...';
+                    document.getElementById('stop-btn').disabled = false;
+                    // 清空之前的转录内容
+                    transcriptionText = '';
+                    document.getElementById('transcription-area').value = '';
+                } else {
+                    document.getElementById('status-message').textContent = '错误: ' + (data.message || '无法启动录制');
+                    document.getElementById('start-btn').disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('status-message').textContent = '发生错误: ' + error;
+                document.getElementById('start-btn').disabled = false;
+            });
+        }
+        
+        // 停止录制
+        function stopRecording() {
+            document.getElementById('status-message').textContent = '正在停止录制...';
+            document.getElementById('stop-btn').disabled = true;
+            
+            fetch('/stop_recording', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('status-message').textContent = '录制已完成，文件保存在: ' + data.file;
+                } else {
+                    document.getElementById('status-message').textContent = '错误: ' + (data.message || '停止录制失败');
+                }
+                document.getElementById('start-btn').disabled = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('status-message').textContent = '发生错误: ' + error;
+                document.getElementById('start-btn').disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

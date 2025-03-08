@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>实时音频转录和翻译</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        .transcription-container {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .transcription-box {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 3px;
+        }
+        .language-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .control-panel {
+            margin: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        .language-select {
+            margin: 10px;
+            padding: 5px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>实时音频转录和翻译</h1>
+    
+    <div class="control-panel">
+        <div>
+            <label>源语言:</label>
+            <select id="source-language" class="language-select">
+                <option value="zh-CN">中文</option>
+                <option value="en-US">English</option>
+                <option value="ja-JP">日本語</option>
+                <option value="ko-KR">한국어</option>
+                <!-- 可以添加更多语言选项 -->
+            </select>
+        </div>
+        <div>
+            <label>目标语言:</label>
+            <select id="target-language" class="language-select">
+                <option value="zh">中文</option>
+                <option value="en">English</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <!-- 可以添加更多语言选项 -->
+            </select>
+        </div>
+        <button onclick="startTranscription()">开始转录</button>
+        <button onclick="stopTranscription()">停止转录</button>
+    </div>
+
+    <div class="transcription-container">
+        <div class="transcription-box">
+            <div class="language-label">原文:</div>
+            <div id="source-text"></div>
+        </div>
+        <div class="transcription-box">
+            <div class="language-label">译文:</div>
+            <div id="target-text"></div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        
+        socket.on('transcription_update', function(data) {
+            document.getElementById('source-text').innerText = data.source;
+            document.getElementById('target-text').innerText = data.target;
+        });
+
+        function startTranscription() {
+            const sourceLanguage = document.getElementById('source-language').value;
+            const targetLanguage = document.getElementById('target-language').value;
+            
+            fetch('/start_transcription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    sourceLanguage: sourceLanguage,
+                    targetLanguage: targetLanguage
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log(data));
+        }
+
+        function stopTranscription() {
+            fetch('/stop_transcription', {method: 'POST'})
+                .then(response => response.json())
+                .then(data => console.log(data));
+        }
+    </script>
+</body>
+</html>
