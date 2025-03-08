@@ -10,7 +10,7 @@
 
 
 ## pre-requisite
-- transcribe capture zoom audio
+- **Enable Amazon Transcribe to capture Zoom Audio**
   - Mac User (BlackHole):
     - Install BlackHole:
     ```sh
