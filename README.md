@@ -8,7 +8,8 @@
 
 ## demo architecture diagram
 
-<img width="914" alt="image" src="https://github.com/user-attachments/assets/c48aa333-7a5f-4eaf-afe4-ffa886fd7e2e" />
+<img width="914" alt="image" src="https://github.com/user-attachments/assets/ec28a53d-017d-4d6f-8c8e-a514fe0b470b" />
+
 
 
 ## pre-requisite
