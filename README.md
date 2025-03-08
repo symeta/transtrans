@@ -19,27 +19,27 @@
     or download and install from [BlackHole GitHub](https://github.com/ExistentialAudio/BlackHole)
 
     - Config Mac Audio Settings:
-      Open "Audio MIDI Setup" (in Applications > Utilities)
-      Create a Multi-Output Device:
-         Click "+" button > Select "Create Multi-Output Device"
-         Toggle your speaker and BlackHole-2ch
-         Ensure your speakers are set as the primary device
+      - Open "Audio MIDI Setup" (in Applications > Utilities)
+      - Create a Multi-Output Device:
+         - Click "+" button > Select "Create Multi-Output Device"
+         - Toggle your speaker and BlackHole-2ch
+         - Ensure your speakers are set as the primary device
     - Config Zoom：
-      Open Zoom Settings > Audio
-      Select Speaker: Choose the Multi-Output Device you just created
-      This way you can hear the meeting audio while it's being sent to BlackHole
+      - Open Zoom Settings > Audio
+      - Select Speaker: Choose the Multi-Output Device you just created
+      - This way you can hear the meeting audio while it's being sent to BlackHole
 
   - Windows User (VB-Cable):
     - Download and install VB-Cable:
-      Download from the official website
-      Run the installer as administrator
-      Configure Windows Audio Settings:
-        Right-click the volume icon in taskbar > Open Sound Settings
-        Select VB-Cable as the "Output" device
-        Optional: Use Voicemeeter to create mixed output to hear audio simultaneously
+      - Download from the official website
+      - Run the installer as administrator
+      - Configure Windows Audio Settings:
+        - Right-click the volume icon in taskbar > Open Sound Settings
+        - Select VB-Cable as the "Output" device
+        - Optional: Use Voicemeeter to create mixed output to hear audio simultaneously
     - Config Zoom:
-      Open Zoom Settings > Audio
-      Select Speaker: Choose VB-Cable
+      - Open Zoom Settings > Audio
+      - Select Speaker: Choose VB-Cable
 
 ## demo video
 
